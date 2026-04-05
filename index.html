@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You ❤️</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+    .background-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.6);
+    }
+    .card {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      max-width: 90%;
+      width: 400px;
+      z-index: 1;
+      color: #fff;
+    }
+    button {
+      padding: 10px 20px;
+      background: rgba(255,77,106,0.8);
+      border: none;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+      font-size: 16px;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    button:hover { opacity: 0.9; }
+    .hidden { display: none; }
+    .small { font-size: 14px; color: #fff; }
+    input[type="text"]{ padding:8px; border-radius:8px; border:1px solid #fff; width:80%; background: rgba(0,0,0,0.4); color: #fff; }
+  </style>
+</head>
+<body>
+  <img class="background-img" src="https://i.imgur.com/KzeZuv9.jpeg" alt="Her Photo" />  <div class="card">
+    <h2>Hiii Myy beautiful princess wazee😏❤️</h2>
+    <p class="small">I have 3 important questions for you… 😘</p><div id="q1">
+  <p>1. Do you love me?? 😏</p>
+  <button onclick="noAnswer(1, this)">No</button>
+  <button onclick="yesAnswer(1)">Yes</button>
+</div>
+
+<div id="q2" class="hidden">
+  <p>2. Are you sure?? 😏😌</p>
+  <button onclick="noAnswer(2, this)">No</button>
+  <button onclick="yesAnswer(2)">Yes</button>
+</div>
+
+<div id="q3" class="hidden">
+  <p>3. Final question… will you always stay with me?? ❤️</p>
+  <button onclick="noAnswer(3, this)">No</button>
+  <button onclick="yesAnswer(3)">Yes</button>
+</div>
+
+<div id="result" class="hidden">
+  <h2>Hehe I knew it, you love me 😘❤️</h2>
+  <p class="small">leave a little message below:</p>
+  <form id="feedbackForm" action="https://formspree.io/f/mnnvbgqo" method="POST">
+    <input type="hidden" name="q1" id="f-q1" value="" />
+    <input type="hidden" name="q2" id="f-q2" value="" />
+    <input type="hidden" name="q3" id="f-q3" value="" />
+    <input type="text" name="message" placeholder="Write a sweet message..." />
+    <div style="margin-top:10px;">
+      <button type="submit">Send to me</button>
+    </div>
+  </form>
+  <p id="sendStatus" class="small"></p>
+</div>
+
+  </div>  <script>
+    const answers = { q1: '', q2: '', q3: '' };
+
+    function randomTranslate() {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 200 - 100;
+      return `translate(${x}px, ${y}px)`;
+    }
+
+    function noAnswer(step, btn) {
+    
+      if(step === 1 && answers.q1 === '') answers.q1 = 'No';
+      if(step === 2 && answers.q2 === '') answers.q2 = 'No';
+      if(step === 3 && answers.q3 === '') answers.q3 = 'No';
+
+      
+      btn.style.transform = randomTranslate();
+
+        
+      if(step === 3){
+        document.getElementById('f-q1').value = answers.q1;
+        document.getElementById('f-q2').value = answers.q2;
+        document.getElementById('f-q3').value = answers.q3;
+        document.getElementById('result').classList.remove('hidden');
+      }
+    }
+
+    function yesAnswer(step) {
+      if(step === 1 && answers.q1 === '') answers.q1 = 'Yes';
+      if(step === 2 && answers.q2 === '') answers.q2 = 'Yes';
+      if(step === 3 && answers.q3 === '') answers.q3 = 'Yes';
+
+      if (step === 1) {
+        document.getElementById("q1").classList.add("hidden");
+        document.getElementById("q2").classList.remove("hidden");
+      }
+      if (step === 2) {
+        document.getElementById("q2").classList.add("hidden");
+        document.getElementById("q3").classList.remove("hidden");
+      }
+      if (step === 3) {
+        document.getElementById('f-q1').value = answers.q1;
+        document.getElementById('f-q2').value = answers.q2;
+        document.getElementById('f-q3').value = answers.q3;
+        document.getElementById("q3").classList.add("hidden");
+        document.getElementById("result").classList.remove("hidden");
+      }
+    }
+
+    const form = document.getElementById('feedbackForm');
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const action = form.getAttribute('action');
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch(action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+        if(res.ok) {
+          document.getElementById('sendStatus').innerText = 'Thank you My lovee 😏❤️❤️❤️';
+          form.reset();
+        } else {
+          document.getElementById('sendStatus').innerText = 'Oops, something went wrong — try again later.';
+        }
+      } catch(err) {
+        document.getElementById('sendStatus').innerText = 'Oops, network error — try again later.';
+      }
+    });
+  </script></body>
+</html>
